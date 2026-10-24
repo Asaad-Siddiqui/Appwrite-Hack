@@ -1,73 +1,112 @@
-import Filter from '@/components/shared/Filter'
-import NoResult from '@/components/shared/NoResult'
-import Pagination from '@/components/shared/Pagination'
-import LocalSearchbar from '@/components/shared/search/LocalSearchbar'
-import { TagFilters } from '@/constants/filters'
-import { getAllTags } from '@/lib/actions/tag.actions'
-import Link from 'next/link'
+import Filter from "@/components/shared/Filter";
+import NoResult from "@/components/shared/NoResult";
+import Pagination from "@/components/shared/Pagination";
+import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
+import { TagFilters } from "@/constants/filters";
+import { getAllTags } from "@/lib/actions/tag.actions";
+import Link from "next/link";
+import { TrendingUp, Hash } from "lucide-react";
+import type { Metadata } from "next";
 
-const Page = async (props: { searchParams: Promise<any> | any }) => {
+export const metadata: Metadata = {
+  title: "Explore Tags | DevFlow - Trending Technologies",
+};
+
+export default async function TagsPage(props: {
+  searchParams: Promise<any> | any;
+}) {
   const searchParams = await props.searchParams;
   const result = await getAllTags({
     searchQuery: searchParams?.q,
     filter: searchParams?.filter,
     page: searchParams?.page ? +searchParams.page : 1,
-  })
+  });
 
   return (
-    <>
-      <h1 className="h1-bold text-dark100_light900">All Tags</h1> 
+    <div className="flex flex-col min-h-screen">
+      {/* Sticky Header */}
+      <header className="sticky top-0 z-20 backdrop-blur-md bg-white/85 dark:bg-black/85 border-b border-neutral-200/80 dark:border-neutral-800/80 px-4 py-3 flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-bold tracking-tight text-neutral-900 dark:text-white font-spaceGrotesk flex items-center gap-2">
+            <TrendingUp className="h-5 w-5 text-sky-500" />
+            <span>Explore Trends & Tags</span>
+          </h1>
+          <p className="text-xs text-neutral-500">
+            Discover active technologies, frameworks, and developer discussions
+          </p>
+        </div>
+      </header>
 
-        <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
-          <LocalSearchbar 
+      {/* Search and Filters */}
+      <div className="p-4 border-b border-neutral-200/80 dark:border-neutral-800/80 bg-neutral-50/50 dark:bg-neutral-950/30 flex flex-col sm:flex-row gap-3 items-center">
+        <div className="flex-1 w-full">
+          <LocalSearchbar
             route="/tags"
             iconPosition="left"
             imgSrc="/assets/icons/search.svg"
-            placeholder="Search for tags"
-            otherClasses="flex-1"
+            placeholder="Search tags by keyword..."
+            otherClasses="w-full"
           />
-
-          <Filter
-            filters={TagFilters}
-            otherClasses="min-h-[56px] sm:min-w-[170px]"
-          />
+        </div>
+        <Filter filters={TagFilters} otherClasses="min-h-[46px] sm:min-w-[150px]" />
       </div>
 
-      <section className="mt-12 flex flex-wrap gap-4">
-        {result.tags.length > 0 ? (
-          result.tags.map((tag: any)=> (
-            <Link href={`/tags/${tag._id}`} key={tag._id} className="shadow-light100_darknone">
-              <article className="background-light900_dark200 light-border flex w-full flex-col rounded-2xl border px-8 py-10 sm:w-[260px]">
-                <div className="background-light800_dark400 w-fit rounded-sm px-5 py-1.5">
-                  <p className="paragraph-semibold text-dark300_light900">
-                    {tag.name}
-                  </p>
+      {/* Stream of Trending Topics (Twitter / X Trends List) */}
+      <div className="flex flex-col divide-y divide-neutral-200/70 dark:divide-neutral-800/70">
+        {result.tags && result.tags.length > 0 ? (
+          result.tags.map((tag: any, idx: number) => {
+            const count = tag.questions?.length || tag.numberOfQuestions || 0;
+            return (
+              <Link
+                href={`/tags/${tag._id}`}
+                key={tag._id}
+                className="p-4 sm:px-6 sm:py-4 flex items-center justify-between hover:bg-neutral-50/80 dark:hover:bg-neutral-950/40 transition-colors group"
+              >
+                <div className="flex flex-col gap-0.5">
+                  <span className="text-xs text-neutral-500 dark:text-neutral-400">
+                    Trending in Tech · #{idx + 1}
+                  </span>
+                  <div className="flex items-center gap-1.5 font-bold text-base sm:text-lg text-neutral-900 dark:text-white group-hover:text-sky-500 transition-colors">
+                    <Hash className="h-4 w-4 text-sky-500" />
+                    <span>{tag.name}</span>
+                  </div>
+                  {tag.description && (
+                    <p className="text-xs text-neutral-500 line-clamp-1 mt-0.5">
+                      {tag.description}
+                    </p>
+                  )}
                 </div>
 
-                <p className="small-medium text-dark400_light500 mt-3.5">
-                  <span className="body-semibold primary-text-gradient mr-2.5">{tag.questions?.length || 0}+</span> Questions
-                </p>
-              </article>
-            </Link>
-          ))
+                <div className="text-right">
+                  <span className="font-mono text-sm font-semibold text-neutral-700 dark:text-neutral-300">
+                    {count}
+                  </span>
+                  <p className="text-xs text-neutral-400">
+                    {count === 1 ? "question" : "questions"}
+                  </p>
+                </div>
+              </Link>
+            );
+          })
         ) : (
-          <NoResult 
-            title="No Tags Found"
-            description="It looks like there are no tags found."
-            link="/ask-question"
-            linkTitle="Ask a question"
-          />
+          <div className="p-12 text-center text-neutral-500">
+            <NoResult
+              title="No Tags Found"
+              description="It looks like there are no tags matching your search query."
+              link="/ask-question"
+              linkTitle="Ask a Question"
+            />
+          </div>
         )}
-      </section>
+      </div>
 
-      <div className="mt-10">
-        <Pagination 
+      {/* Bottom Pagination */}
+      <div className="p-4 border-t border-neutral-100 dark:border-neutral-900">
+        <Pagination
           pageNumber={searchParams?.page ? +searchParams.page : 1}
           isNext={result.isNext}
         />
       </div>
-    </>
-  )
+    </div>
+  );
 }
-
-export default Page

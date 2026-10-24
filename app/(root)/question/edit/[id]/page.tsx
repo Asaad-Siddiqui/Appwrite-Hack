@@ -2,29 +2,50 @@ import Question from '@/components/forms/Question'
 import { getQuestionById } from '@/lib/actions/question.action';
 import { getUserById } from '@/lib/actions/user.action';
 import { auth } from '@/lib/actions/auth.action'
+import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
+import { redirect } from 'next/navigation';
 
 const Page = async (props: { params: Promise<{ id: string }> | { id: string } }) => {
   const params = await props.params;
   const { userId } = await auth();
 
-  if(!userId) return null;
+  if (!userId) {
+    redirect('/sign-in');
+  }
 
-  const mongoUser = await getUserById({ userId })
-  const result = await getQuestionById({ questionId: params.id})
+  const mongoUser = await getUserById({ userId });
+  const result = await getQuestionById({ questionId: params.id });
 
   return (
-    <>
-      <h1 className="h1-bold text-dark100_light900">Edit Question</h1>
+    <div className="flex flex-col">
+      {/* Sticky header */}
+      <div className="sticky top-0 z-30 flex items-center gap-6 border-b border-neutral-200 dark:border-neutral-800 bg-white/80 dark:bg-black/80 px-4 py-3 backdrop-blur-md">
+        <Link 
+          href={`/question/${params.id}`}
+          className="rounded-full p-2 text-neutral-700 dark:text-neutral-300 transition hover:bg-neutral-100 dark:hover:bg-neutral-900"
+        >
+          <ArrowLeft className="size-5" />
+        </Link>
+        <div>
+          <h1 className="text-xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100">
+            Edit question
+          </h1>
+          <p className="text-xs text-neutral-500 line-clamp-1 max-w-[400px]">
+            {result?.title}
+          </p>
+        </div>
+      </div>
 
-      <div className="mt-9">
+      <div className="p-4 sm:p-6">
         <Question 
           type="Edit"
-          mongoUserId={mongoUser._id}
+          mongoUserId={mongoUser?._id || userId}
           questionDetails={JSON.stringify(result)}
         />
       </div>
-    </>
-  )
-}
+    </div>
+  );
+};
 
-export default Page
+export default Page;

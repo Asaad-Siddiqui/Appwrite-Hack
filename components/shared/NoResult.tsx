@@ -1,7 +1,7 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import { Button } from '../ui/button'
+import { MessageSquare } from 'lucide-react'
 
 interface Props {
   title: string
@@ -12,31 +12,25 @@ interface Props {
 
 const NoResult = ({ title, description, link, linkTitle }: Props) => {
   return (
-    <div className="mt-10 flex w-full flex-col items-center justify-center">
-      <Image 
-        src="/assets/images/light-illustration.png"
-        alt="No result illustration"
-        width={270}
-        height={200}
-        className="block object-contain dark:hidden"
-      />
+    <div className="flex w-full flex-col items-center justify-center py-16 px-6 text-center">
+      <div className="flex size-14 items-center justify-center rounded-full bg-neutral-100 dark:bg-neutral-900 text-neutral-400">
+        <MessageSquare className="size-7 text-neutral-400 dark:text-neutral-500" />
+      </div>
 
-      <Image 
-        src="/assets/images/dark-illustration.png"
-        alt="No result illustration"
-        width={270}
-        height={200}
-        className="hidden object-contain dark:flex"
-      />
+      <h3 className="mt-4 text-xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100">
+        {title}
+      </h3>
+      <p className="mt-2 max-w-sm text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed">
+        {description}
+      </p>
 
-      <h2 className="h2-bold text-dark200_light900 mt-8">{title}</h2>
-      <p className="body-regular text-dark500_light700 my-3.5 max-w-md text-center">{description}</p>
-
-      <Link href={link}>
-        <Button className="paragraph-medium mt-5 min-h-[46px] rounded-lg bg-primary-500 px-4 py-3 text-light-900 hover:bg-primary-500 dark:bg-primary-500 dark:text-light-900">
-          {linkTitle}
-        </Button>
-      </Link>
+      {link && linkTitle && (
+        <Link href={link} className="mt-6">
+          <Button className="rounded-full bg-sky-500 hover:bg-sky-600 px-6 py-2.5 text-sm font-bold text-white shadow-sm hover:shadow transition-all">
+            {linkTitle}
+          </Button>
+        </Link>
+      )}
     </div>
   )
 }

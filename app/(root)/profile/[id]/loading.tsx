@@ -2,62 +2,62 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const Loading = () => {
   return (
-    <section>
-      <div className='flex flex-col items-start gap-4 lg:flex-row'>
-        <Skeleton className='h-36 w-36 rounded-full' />
-
-        <div className='mt-3'>
-          <Skeleton className='h-7 w-28' />
-          <Skeleton className='mt-3 h-7 w-20' />
-
-          <div className='mt-5 flex flex-wrap items-center justify-start gap-5'>
-            <Skeleton className='h-9 w-36' />
-            <Skeleton className='h-9 w-36' />
-            <Skeleton className='h-9 w-36' />
-          </div>
-
-          <Skeleton className='mt-8 h-7 w-9/12' />
+    <div className="flex flex-col">
+      {/* Header with back arrow */}
+      <div className="sticky top-0 z-30 flex items-center gap-6 border-b border-neutral-200 dark:border-neutral-800 bg-white/80 dark:bg-black/80 px-4 py-2 backdrop-blur-md">
+        <Skeleton className="size-8 rounded-full" />
+        <div className="flex flex-col gap-1">
+          <Skeleton className="h-5 w-28 rounded-md" />
+          <Skeleton className="h-3 w-16 rounded-md" />
         </div>
       </div>
 
-      <div className='mb-12 mt-10'>
-        <Skeleton className='h-7 w-full' />
+      {/* Banner Skeleton */}
+      <Skeleton className="h-36 sm:h-48 w-full" />
 
-        <div className='mt-5 grid grid-cols-1 gap-5 xs:grid-cols-2 md:grid-cols-4'>
-          <Skeleton className='h-28 rounded-md' />
-          <Skeleton className='h-28 rounded-md' />
-          <Skeleton className='h-28 rounded-md' />
-          <Skeleton className='h-28 rounded-md' />
+      {/* Profile info section */}
+      <div className="relative px-4 pb-4">
+        {/* Avatar overlapping banner */}
+        <div className="-mt-16 sm:-mt-20 mb-3 flex items-end justify-between">
+          <Skeleton className="size-28 sm:size-36 rounded-full border-4 border-white dark:border-black" />
+          <Skeleton className="h-9 w-28 rounded-full" />
+        </div>
+
+        {/* User meta skeleton */}
+        <div className="flex flex-col gap-2">
+          <Skeleton className="h-6 w-44 rounded-md" />
+          <Skeleton className="h-4 w-28 rounded-md" />
+          <Skeleton className="h-4 w-3/4 rounded-md" />
+          
+          <div className="mt-2 flex gap-4">
+            <Skeleton className="h-4 w-24 rounded-md" />
+            <Skeleton className="h-4 w-28 rounded-md" />
+          </div>
+        </div>
+
+        {/* Stat cards skeleton */}
+        <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4">
+          <Skeleton className="h-16 rounded-xl" />
+          <Skeleton className="h-16 rounded-xl" />
+          <Skeleton className="h-16 rounded-xl" />
+          <Skeleton className="h-16 rounded-xl" />
         </div>
       </div>
 
-      <div className='mt-10 flex gap-10'>
-        <div className='flex flex-1 flex-col'>
-          <div className='flex'>
-            <Skeleton className='h-11 w-24 rounded-r-none' />
-            <Skeleton className='h-11 w-24 rounded-l-none' />
+      {/* Feed post skeletons */}
+      <div className="divide-y divide-neutral-200 dark:divide-neutral-800 border-t border-neutral-200 dark:border-neutral-800">
+        {[1, 2, 3].map((item) => (
+          <div key={item} className="flex gap-3 p-4 sm:p-5">
+            <Skeleton className="size-10 rounded-full shrink-0" />
+            <div className="flex flex-1 flex-col gap-2.5">
+              <Skeleton className="h-4 w-28 rounded-md" />
+              <Skeleton className="h-5 w-11/12 rounded-md" />
+              <Skeleton className="h-4 w-4/5 rounded-md" />
+            </div>
           </div>
-
-          <div className='mt-5 flex w-full flex-col gap-6'>
-            {[1, 2, 3, 4, 5].map((item) => (
-              <Skeleton key={item} className='h-48 w-full rounded-xl' />
-            ))}
-          </div>
-        </div>
-
-        <div className='flex min-w-[278px] flex-col max-lg:hidden'>
-          <Skeleton className='h-7 w-10' />
-
-          <div className='mt-7 flex flex-col gap-4'>
-            <Skeleton className='h-7' />
-            <Skeleton className='h-7' />
-            <Skeleton className='h-7' />
-            <Skeleton className='h-7' />
-            <Skeleton className='h-7' />
-          </div>
-        </div>
+        ))}
       </div>
-    </section>
+    </div>
   );
 };
 

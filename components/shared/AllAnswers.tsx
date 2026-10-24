@@ -1,13 +1,13 @@
-import React from 'react'
-import Filter from './Filter';
-import { AnswerFilters } from '@/constants/filters';
-import { getAnswers } from '@/lib/actions/answer.action';
-import Link from 'next/link';
-import Image from 'next/image';
-import { getTimestamp } from '@/lib/utils';
-import ParseHTML from './ParseHTML';
-import Votes from './Votes';
-import Pagination from './Pagination';
+import React from "react";
+import Filter from "./Filter";
+import { AnswerFilters } from "@/constants/filters";
+import { getAnswers } from "@/lib/actions/answer.action";
+import Link from "next/link";
+import Image from "next/image";
+import { getTimestamp } from "@/lib/utils";
+import ParseHTML from "./ParseHTML";
+import Votes from "./Votes";
+import Pagination from "./Pagination";
 
 interface Props {
   questionId: string;
@@ -17,70 +17,105 @@ interface Props {
   filter?: string;
 }
 
-const AllAnswers = async ({ questionId, userId, totalAnswers, page, filter }: Props) => {
+export default async function AllAnswers({
+  questionId,
+  userId,
+  totalAnswers,
+  page,
+  filter,
+}: Props) {
   const result = await getAnswers({
     questionId,
     page: page ? +page : 1,
     sortBy: filter,
-  })
+  });
 
   return (
-    <div className="mt-11">
-      <div className='flex items-center justify-between'>
-        <h3 className='primary-text-gradient'>{totalAnswers} Answers</h3>
-
+    <div className="mt-4">
+      <div className="flex items-center justify-between pb-4 border-b border-neutral-200/60 dark:border-neutral-800/60">
+        <h3 className="font-bold text-lg text-neutral-900 dark:text-white font-spaceGrotesk">
+          {totalAnswers} {totalAnswers === 1 ? "Answer" : "Answers"}
+        </h3>
         <Filter filters={AnswerFilters} />
       </div>
 
-      <div>
-        {result.answers.map((answer: any) => (
-          <article key={answer._id} className='light-border border-b py-10'>
-              <div className='mb-8 flex flex-col-reverse justify-between gap-5 sm:flex-row sm:items-center sm:gap-2'>
-                <Link href={`/profile/${answer.author?.clerkId || answer.author?._id}`} className="flex flex-1 items-start gap-1 sm:items-center">
+      <div className="divide-y divide-neutral-200/60 dark:divide-neutral-800/60">
+        {result.answers && result.answers.length > 0 ? (
+          result.answers.map((answer: any) => {
+            const author = answer.author || {};
+            const username =
+              author.username ||
+              author.name?.toLowerCase().replace(/\s+/g, "") ||
+              "developer";
+            const avatarUrl =
+              author.picture ||
+              `https://api.dicebear.com/7.x/bottts/svg?seed=${author.name || "dev"}`;
+
+            return (
+              <article key={answer._id} className="py-5 flex gap-3">
+                {/* Author Avatar */}
+                <Link
+                  href={`/profile/${author.clerkId || author._id}`}
+                  className="shrink-0"
+                >
                   <Image
-                    src={answer.author?.picture || `https://api.dicebear.com/7.x/bottts/svg?seed=${answer.author?.name || 'User'}`}
-                    width={18}
-                    height={18}
-                    alt="profile"
-                    className="rounded-full object-cover max-sm:mt-0.5"
+                    src={avatarUrl}
+                    width={40}
+                    height={40}
+                    alt={author.name || "User"}
+                    className="rounded-full h-10 w-10 object-cover border border-neutral-200 dark:border-neutral-800"
                   />
-                  <div className="flex flex-col sm:flex-row sm:items-center">
-                    <p className="body-semibold text-dark300_light700">
-                      {answer.author?.name || 'User'}
-                    </p>
-
-                    <p className="small-regular text-light400_light500 ml-0.5 mt-0.5 line-clamp-1">
-                      answered {" "}
-                      {getTimestamp(answer.createdAt)}
-                      </p>
-                  </div>
                 </Link>
-                <div className="flex justify-end">
-                  <Votes 
-                    type="Answer"
-                    itemId={JSON.stringify(answer._id)}
-                    userId={userId ? JSON.stringify(userId) : ""}
-                    upvotes={answer.upvotes?.length || 0}
-                    hasupVoted={userId ? (answer.upvotes || []).includes(userId) : false}
-                    downvotes={answer.downvotes?.length || 0}
-                    hasdownVoted={userId ? (answer.downvotes || []).includes(userId) : false}
-                  />
-                </div>
 
-            </div>
-              <ParseHTML data={answer.content} />
-          </article>
-        ))}
+                {/* Reply Content */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-1.5 flex-wrap text-sm">
+                      <Link
+                        href={`/profile/${author.clerkId || author._id}`}
+                        className="font-bold text-neutral-900 dark:text-white hover:underline truncate"
+                      >
+                        {author.name || "Anonymous"}
+                      </Link>
+                      <span className="text-xs text-neutral-500 truncate">
+                        @{username}
+                      </span>
+                      <span className="text-neutral-400 dark:text-neutral-600">·</span>
+                      <span className="text-xs text-neutral-500 whitespace-nowrap">
+                        {getTimestamp(answer.createdAt)}
+                      </span>
+                    </div>
+
+                    <div className="shrink-0">
+                      <Votes
+                        type="Answer"
+                        itemId={JSON.stringify(answer._id)}
+                        userId={userId ? JSON.stringify(userId) : ""}
+                        upvotes={answer.upvotes?.length || 0}
+                        hasupVoted={userId ? (answer.upvotes || []).includes(userId) : false}
+                        downvotes={answer.downvotes?.length || 0}
+                        hasdownVoted={userId ? (answer.downvotes || []).includes(userId) : false}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="markdown mt-2.5 text-sm sm:text-base text-neutral-800 dark:text-neutral-200 leading-relaxed">
+                    <ParseHTML data={answer.content} />
+                  </div>
+                </div>
+              </article>
+            );
+          })
+        ) : (
+          <div className="py-8 text-center text-sm text-neutral-500">
+            No answers posted yet. Be the first to reply!
+          </div>
+        )}
       </div>
 
-      <div className="mt-10 w-full">
-        <Pagination 
-          pageNumber={page ? +page : 1}
-          isNext={result.isNextAnswer}
-        />
+      <div className="mt-6">
+        <Pagination pageNumber={page ? +page : 1} isNext={result.isNextAnswer} />
       </div>
     </div>
-  )
+  );
 }
-
-export default AllAnswers

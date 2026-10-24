@@ -37,17 +37,20 @@ const HomeFilters = () => {
       }
 
   return (
-    <div className="mt-10 hidden flex-wrap gap-3 md:flex">
+    <div className="flex flex-wrap gap-2 py-2">
       {HomePageFilters.map((item) => (
-        <Button key={item.value} onClick={() => {}}
-          className={`body-medium rounded-lg px-6 py-3 capitalize shadow-none ${active === item.value 
-          ? 'dark:hover:bg-dark-400 bg-primary-100 text-primary-500 hover:bg-primary-100 dark:bg-dark-400 dark:text-primary-500' 
-          : 'bg-light-800 text-light-500 hover:bg-light-800 dark:bg-dark-300 dark:text-light-500 dark:hover:bg-dark-300'
-        }`}
-        onClickCapture={() => handleTypeClick(item.value)}
+        <button
+          key={item.value}
+          type="button"
+          onClick={() => handleTypeClick(item.value)}
+          className={`rounded-full px-4 py-1.5 text-xs font-semibold capitalize transition ${
+            active === item.value 
+              ? 'bg-sky-500 text-white shadow-sm' 
+              : 'border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200 dark:hover:bg-neutral-800'
+          }`}
         >
           {item.name}
-        </Button>
+        </button>
       ))}
     </div>
   )

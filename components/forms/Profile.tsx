@@ -60,23 +60,23 @@ const Profile = ({ clerkId, user }: Props) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="mt-9 flex w-full flex-col gap-9">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex w-full flex-col gap-6">
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
-            <FormItem className="space-y-3.5">
-              <FormLabel className="paragraph-semibold text-dark400_light800">
-                Name <span className="text-primary-500">*</span>
+            <FormItem className="space-y-1.5">
+              <FormLabel className="text-sm font-semibold text-neutral-800 dark:text-neutral-200">
+                Full Name <span className="text-sky-500">*</span>
               </FormLabel>
               <FormControl>
                 <Input 
-                  placeholder="Your name" 
-                  className="no-focus paragraph-regular light-border-2 background-light800_dark300 text-dark300_light700 min-h-[56px] border"
+                  placeholder="Your display name" 
+                  className="h-11 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#0a0a0a] px-3.5 text-sm text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-600 focus-visible:border-sky-500 focus-visible:ring-1 focus-visible:ring-sky-500"
                   {...field} 
                 />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-xs text-red-500" />
             </FormItem>
           )}
         />
@@ -84,18 +84,18 @@ const Profile = ({ clerkId, user }: Props) => {
           control={form.control}
           name="username"
           render={({ field }) => (
-            <FormItem className="space-y-3.5">
-              <FormLabel className="paragraph-semibold text-dark400_light800">
-                Username <span className="text-primary-500">*</span>
+            <FormItem className="space-y-1.5">
+              <FormLabel className="text-sm font-semibold text-neutral-800 dark:text-neutral-200">
+                Username (@handle) <span className="text-sky-500">*</span>
               </FormLabel>
               <FormControl>
                 <Input 
-                  placeholder="Your username" 
-                  className="no-focus paragraph-regular light-border-2 background-light800_dark300 text-dark300_light700 min-h-[56px] border"
+                  placeholder="username" 
+                  className="h-11 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#0a0a0a] px-3.5 text-sm text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-600 focus-visible:border-sky-500 focus-visible:ring-1 focus-visible:ring-sky-500"
                   {...field} 
                 />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-xs text-red-500" />
             </FormItem>
           )}
         />
@@ -103,19 +103,19 @@ const Profile = ({ clerkId, user }: Props) => {
           control={form.control}
           name="portfolioWebsite"
           render={({ field }) => (
-            <FormItem className="space-y-3.5">
-              <FormLabel className="paragraph-semibold text-dark400_light800">
-                Portfolio Link
+            <FormItem className="space-y-1.5">
+              <FormLabel className="text-sm font-semibold text-neutral-800 dark:text-neutral-200">
+                Website
               </FormLabel>
               <FormControl>
                 <Input 
                   type="url"
-                  placeholder="Your portfolio URL" 
-                  className="no-focus paragraph-regular light-border-2 background-light800_dark300 text-dark300_light700 min-h-[56px] border"
+                  placeholder="https://yourportfolio.com" 
+                  className="h-11 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#0a0a0a] px-3.5 text-sm text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-600 focus-visible:border-sky-500 focus-visible:ring-1 focus-visible:ring-sky-500"
                   {...field} 
                 />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-xs text-red-500" />
             </FormItem>
           )}
         />
@@ -124,18 +124,18 @@ const Profile = ({ clerkId, user }: Props) => {
           control={form.control}
           name="location"
           render={({ field }) => (
-            <FormItem className="space-y-3.5">
-              <FormLabel className="paragraph-semibold text-dark400_light800">
+            <FormItem className="space-y-1.5">
+              <FormLabel className="text-sm font-semibold text-neutral-800 dark:text-neutral-200">
                 Location 
               </FormLabel>
               <FormControl>
                 <Input 
-                  placeholder="Where are you from?" 
-                  className="no-focus paragraph-regular light-border-2 background-light800_dark300 text-dark300_light700 min-h-[56px] border"
+                  placeholder="San Francisco, CA" 
+                  className="h-11 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#0a0a0a] px-3.5 text-sm text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-600 focus-visible:border-sky-500 focus-visible:ring-1 focus-visible:ring-sky-500"
                   {...field} 
                 />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-xs text-red-500" />
             </FormItem>
           )}
         />
@@ -144,25 +144,36 @@ const Profile = ({ clerkId, user }: Props) => {
           control={form.control}
           name="bio"
           render={({ field }) => (
-            <FormItem className="space-y-3.5">
-              <FormLabel className="paragraph-semibold text-dark400_light800">
-                Bio <span className="text-primary-500">*</span>
+            <FormItem className="space-y-1.5">
+              <FormLabel className="text-sm font-semibold text-neutral-800 dark:text-neutral-200">
+                Bio <span className="text-sky-500">*</span>
               </FormLabel>
               <FormControl>
                 <Textarea 
-                  placeholder="What's special about you?" 
-                  className="no-focus paragraph-regular light-border-2 background-light800_dark300 text-dark300_light700 min-h-[56px] border"
+                  placeholder="Tell the developer community about yourself..." 
+                  className="min-h-[90px] rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#0a0a0a] p-3 text-sm text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-600 focus-visible:border-sky-500 focus-visible:ring-1 focus-visible:ring-sky-500"
                   {...field} 
                 />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-xs text-red-500" />
             </FormItem>
           )}
         />
 
-        <div className="mt-7 flex justify-end">
-          <Button type="submit" className="primary-gradient w-fit" disabled={isSubmitting}>
-            {isSubmitting ? "Saving..." : "Save"}
+        <div className="flex justify-end pt-2">
+          <Button 
+            type="submit" 
+            className="rounded-full bg-sky-500 hover:bg-sky-600 px-6 py-2 text-sm font-bold text-white transition-all shadow-sm hover:shadow disabled:opacity-50" 
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <span className="flex items-center gap-2">
+                <span className="size-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                Saving...
+              </span>
+            ) : (
+              "Save profile"
+            )}
           </Button>
         </div>
       </form>

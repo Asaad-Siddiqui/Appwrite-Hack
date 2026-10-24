@@ -1,28 +1,30 @@
-import LeftSidebar from '@/components/shared/LeftSidebar'
-import RightSidebar from '@/components/shared/RightSidebar'
-import Navbar from '@/components/shared/navbar/Navbar'
-import { Toaster } from '@/components/ui/toaster'
-import React from 'react'
+import LeftSidebar from "@/components/shared/LeftSidebar";
+import RightSidebar from "@/components/shared/RightSidebar";
+import Navbar from "@/components/shared/navbar/Navbar";
+import { Toaster } from "@/components/ui/toaster";
+import React from "react";
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <main className="background-light850_dark100 relative">
-      <Navbar />
-      <div className="flex">
+    <div className="min-h-screen bg-white dark:bg-black text-neutral-900 dark:text-neutral-100 flex justify-center">
+      <div className="flex w-full max-w-[1260px] justify-between relative">
+        {/* Left Navigation Rail (Desktop) */}
         <LeftSidebar />
 
-        <section className="flex min-h-screen flex-1 flex-col px-6 pb-6 pt-36 max-md:pb-14 sm:px-14">
-          <div className="mx-auto w-full max-w-5xl">
-            {children}
+        {/* Center Stream (Timeline) */}
+        <main className="flex-1 min-h-screen border-r border-l border-neutral-200 dark:border-neutral-800 max-w-[680px] w-full min-w-0 pb-16 sm:pb-8">
+          {/* Mobile Top Header */}
+          <div className="sm:hidden sticky top-0 z-30">
+            <Navbar />
           </div>
-        </section>
+          {children}
+        </main>
 
+        {/* Right Widget Sidebar (Desktop) */}
         <RightSidebar />
       </div>
 
       <Toaster />
-    </main>
-  )
+    </div>
+  );
 }
-
-export default Layout

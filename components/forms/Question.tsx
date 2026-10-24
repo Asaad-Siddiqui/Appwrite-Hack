@@ -121,22 +121,26 @@ const Question = ({ type, mongoUserId, questionDetails }: Props) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex w-full flex-col gap-10">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex w-full flex-col gap-7">
         <FormField
           control={form.control}
           name="title"
           render={({ field }) => (
-            <FormItem className="flex w-full flex-col">
-              <FormLabel className="paragraph-semibold text-dark400_light800">Question Title <span className="text-primary-500">*</span></FormLabel>
-              <FormControl className="mt-3.5">
+            <FormItem className="flex w-full flex-col gap-1.5">
+              <FormLabel className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
+                Question Title <span className="text-sky-500">*</span>
+              </FormLabel>
+              <FormControl>
                 <Input 
-                className="no-focus paragraph-regular background-light900_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
-                {...field} />
+                  placeholder="What's your programming question? Be specific..."
+                  className="h-12 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#0a0a0a] px-4 text-sm text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-600 focus-visible:border-sky-500 focus-visible:ring-1 focus-visible:ring-sky-500"
+                  {...field} 
+                />
               </FormControl>
-              <FormDescription className="body-regular mt-2.5 text-light-500">
-                Be specific and imagine you&apos;re asking a question to another person.
+              <FormDescription className="text-xs text-neutral-500 dark:text-neutral-400">
+                Imagine you&apos;re asking a question to a fellow engineer in a thread.
               </FormDescription>
-              <FormMessage className="text-red-500" />
+              <FormMessage className="text-xs text-red-500" />
             </FormItem>
           )}
         />
@@ -144,40 +148,44 @@ const Question = ({ type, mongoUserId, questionDetails }: Props) => {
           control={form.control}
           name="explanation"
           render={({ field }) => (
-            <FormItem className="flex w-full flex-col gap-3">
-              <FormLabel className="paragraph-semibold text-dark400_light800">Detailed explanation of your problem <span className="text-primary-500">*</span></FormLabel>
-              <FormControl className="mt-3.5">
-              <Editor
-                apiKey={process.env.NEXT_PUBLIC_TINY_EDITOR_API_KEY}
-                onInit={(evt, editor) => {
-                  // @ts-ignore
-                  editorRef.current = editor
-                }}
-                onBlur={field.onBlur}
-                onEditorChange={(content) => field.onChange(content)}
-                initialValue={parsedQuestionDetails?.content || ''}
-                init={{
-                  height: 350,
-                  menubar: false,
-                  plugins: [
-                    'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview', 'anchor',
-                    'searchreplace', 'visualblocks', 'codesample', 'fullscreen',
-                    'insertdatetime', 'media', 'table'
-                  ],
-                  toolbar: 
-                  'undo redo | ' +
-                  'codesample | bold italic forecolor | alignleft aligncenter |' +
-                  'alignright alignjustify | bullist numlist',
-                  content_style: 'body { font-family:Inter; font-size:16px }',
-                  skin: mode === 'dark' ? 'oxide-dark' : 'oxide',
-                  content_css: mode === 'dark' ? 'dark' : 'light', 
-                }}
-              />
+            <FormItem className="flex w-full flex-col gap-1.5">
+              <FormLabel className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
+                Detailed Context & Code <span className="text-sky-500">*</span>
+              </FormLabel>
+              <FormControl>
+                <div className="overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-800 focus-within:border-sky-500 focus-within:ring-1 focus-within:ring-sky-500">
+                  <Editor
+                    apiKey={process.env.NEXT_PUBLIC_TINY_EDITOR_API_KEY}
+                    onInit={(evt, editor) => {
+                      // @ts-ignore
+                      editorRef.current = editor
+                    }}
+                    onBlur={field.onBlur}
+                    onEditorChange={(content) => field.onChange(content)}
+                    initialValue={parsedQuestionDetails?.content || ''}
+                    init={{
+                      height: 350,
+                      menubar: false,
+                      plugins: [
+                        'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview', 'anchor',
+                        'searchreplace', 'visualblocks', 'codesample', 'fullscreen',
+                        'insertdatetime', 'media', 'table'
+                      ],
+                      toolbar: 
+                      'undo redo | ' +
+                      'codesample | bold italic forecolor | alignleft aligncenter |' +
+                      'alignright alignjustify | bullist numlist',
+                      content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 15px; }',
+                      skin: mode === 'dark' ? 'oxide-dark' : 'oxide',
+                      content_css: mode === 'dark' ? 'dark' : 'light', 
+                    }}
+                  />
+                </div>
               </FormControl>
-              <FormDescription className="body-regular mt-2.5 text-light-500">
-                Introduce the problem and expand on what you put in the title. Minimum 20 characters.
+              <FormDescription className="text-xs text-neutral-500 dark:text-neutral-400">
+                Provide code snippets, minimal reproducible examples, and what you&apos;ve already tried. (Min 20 chars)
               </FormDescription>
-              <FormMessage className="text-red-500" />
+              <FormMessage className="text-xs text-red-500" />
             </FormItem>
           )}
         />
@@ -185,54 +193,71 @@ const Question = ({ type, mongoUserId, questionDetails }: Props) => {
           control={form.control}
           name="tags"
           render={({ field }) => (
-            <FormItem className="flex w-full flex-col">
-              <FormLabel className="paragraph-semibold text-dark400_light800">Tags <span className="text-primary-500">*</span></FormLabel>
-              <FormControl className="mt-3.5">
-                <>
-                <Input 
-                disabled={type === 'Edit'}
-                className="no-focus paragraph-regular background-light900_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
-                placeholder="Add tags..."
-                onKeyDown={(e) => handleInputKeyDown(e, field)}
-                />
-                
-                {field.value.length > 0 && (
-                  <div className="flex-start mt-2.5 gap-2.5">
-                    {field.value.map((tag: any) => (
-                      <Badge key={tag} className="subtle-medium background-light800_dark300 text-light400_light500 flex items-center justify-center gap-2 rounded-md border-none px-4 py-2 capitalize" 
-                      onClick={() => type !== 'Edit' ? handleTagRemove(tag, field) : () => {}}>
-                        {tag}
-                        {type !== 'Edit' && (<Image 
-                          src="/assets/icons/close.svg"
-                          alt="Close icon"
-                          width={12}
-                          height={12}
-                          className="cursor-pointer object-contain invert-0 dark:invert"
-                        />)}
-                      </Badge>
-                    ))}
-                  </div>
-                )}
-                </>
+            <FormItem className="flex w-full flex-col gap-1.5">
+              <FormLabel className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
+                Tags <span className="text-sky-500">*</span>
+              </FormLabel>
+              <FormControl>
+                <div className="flex flex-col gap-2.5">
+                  <Input 
+                    disabled={type === 'Edit'}
+                    className="h-12 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#0a0a0a] px-4 text-sm text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-600 focus-visible:border-sky-500 focus-visible:ring-1 focus-visible:ring-sky-500 disabled:opacity-50"
+                    placeholder="Add up to 3 tags (press Enter after each tag, e.g. nextjs, react, appwrite)..."
+                    onKeyDown={(e) => handleInputKeyDown(e, field)}
+                  />
+                  
+                  {field.value.length > 0 && (
+                    <div className="flex flex-wrap items-center gap-2 pt-1">
+                      {field.value.map((tag: any) => (
+                        <span 
+                          key={tag} 
+                          className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 px-3 py-1 text-xs font-semibold text-sky-600 dark:text-sky-400"
+                        >
+                          #{tag.toLowerCase()}
+                          {type !== 'Edit' && (
+                            <button
+                              type="button"
+                              onClick={() => handleTagRemove(tag, field)}
+                              className="text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200"
+                            >
+                              <Image 
+                                src="/assets/icons/close.svg"
+                                alt="Close icon"
+                                width={10}
+                                height={10}
+                                className="invert-0 dark:invert"
+                              />
+                            </button>
+                          )}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </FormControl>
-              <FormDescription className="body-regular mt-2.5 text-light-500">
-                Add up to 3 tags to describe what your question is about. You need to press enter to add a tag.
+              <FormDescription className="text-xs text-neutral-500 dark:text-neutral-400">
+                Add up to 3 tags to describe technologies. Press enter after typing.
               </FormDescription>
-              <FormMessage className="text-red-500" />
+              <FormMessage className="text-xs text-red-500" />
             </FormItem>
           )}
         />
-        <Button type="submit" className="primary-gradient w-fit !text-light-900" disabled={isSubmitting}>
-          {isSubmitting ? (
-            <>
-              {type === 'Edit' ? 'Editing...' : 'Posting...' }
-            </>
-          ) : (
-            <>
-              {type === 'Edit' ? 'Edit Question' : 'Ask a Question'}
-            </>
-          )}
-        </Button>
+        <div className="flex justify-end pt-2">
+          <Button 
+            type="submit" 
+            className="rounded-full bg-sky-500 hover:bg-sky-600 px-6 py-2.5 font-bold text-white transition-all shadow-sm hover:shadow disabled:opacity-50" 
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <span className="flex items-center gap-2">
+                <span className="size-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                {type === 'Edit' ? 'Saving...' : 'Posting...'}
+              </span>
+            ) : (
+              <>{type === 'Edit' ? 'Save Changes' : 'Post Question'}</>
+            )}
+          </Button>
+        </div>
       </form>
     </Form>
   )

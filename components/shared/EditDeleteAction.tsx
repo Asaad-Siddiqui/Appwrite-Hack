@@ -2,8 +2,8 @@
 
 import { deleteAnswer } from "@/lib/actions/answer.action";
 import { deleteQuestion } from "@/lib/actions/question.action";
-import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
+import { Pencil, Trash2 } from "lucide-react";
 
 interface Props {
   type: string;
@@ -39,26 +39,26 @@ const EditDeleteAction = ({ type, itemId }: Props) => {
   };
 
   return (
-    <div className="flex items-center justify-end gap-3 max-sm:w-full">
+    <div className="flex items-center justify-end gap-1">
       {type === 'Question' && (
-        <Image 
-          src="/assets/icons/edit.svg"
-          alt="Edit"
-          width={14}
-          height={14}
-          className="cursor-pointer object-contain"
+        <button
+          type="button"
           onClick={handleEdit}
-        />
+          aria-label="Edit"
+          className="rounded-full p-1.5 text-neutral-400 transition hover:bg-sky-500/10 hover:text-sky-500"
+        >
+          <Pencil className="size-4" />
+        </button>
       )}
 
-        <Image 
-          src="/assets/icons/trash.svg"
-          alt="Delete"
-          width={14}
-          height={14}
-          className="cursor-pointer object-contain"
-          onClick={handleDelete}
-        />
+      <button
+        type="button"
+        onClick={handleDelete}
+        aria-label="Delete"
+        className="rounded-full p-1.5 text-neutral-400 transition hover:bg-rose-500/10 hover:text-rose-500"
+      >
+        <Trash2 className="size-4" />
+      </button>
     </div>
   )
 }

@@ -1,42 +1,32 @@
-import { SignedIn, UserButton } from '@/context/AuthContext'
-import Image from 'next/image'
-import Link from 'next/link'
-import React, { Suspense } from 'react'
-import Theme from './Theme'
-import MobileNav from './MobileNav'
-import GlobalSearch from '../search/GlobalSearch'
+import { SignedIn, UserButton } from "@/context/AuthContext";
+import Link from "next/link";
+import React from "react";
+import Theme from "./Theme";
+import MobileNav from "./MobileNav";
+import { Terminal } from "lucide-react";
 
-const Navbar = () => {
+export default function Navbar() {
   return (
-    <nav className="flex-between background-light900_dark200 fixed z-50 w-full gap-5 p-6 shadow-light-300 dark:shadow-none sm:px-12">
-      <Link href="/" className="flex items-center gap-1">
-        <Image
-          src="/assets/images/site-logo.svg"
-          width={23}
-          height={23}
-          alt="DevFlow"
-        />
-
-        <p className="h2-bold font-spaceGrotesk text-dark-100 dark:text-light-900 max-sm:hidden">Dev <span className="text-primary-500">Overflow</span></p>
-      </Link>
-
-      <Suspense fallback={<div className="flex-1 max-w-[600px]" />}>
-        <GlobalSearch />
-      </Suspense>
-
-      <div className="flex-between gap-5">
-        <Theme />
-
-        <SignedIn>
-          <UserButton 
-            afterSignOutUrl="/"
-          />
-        </SignedIn>
-
+    <nav className="flex items-center justify-between backdrop-blur-md bg-white/90 dark:bg-black/90 border-b border-neutral-200 dark:border-neutral-800 px-4 py-3 z-40 select-none">
+      <div className="flex items-center gap-2">
         <MobileNav />
       </div>
-    </nav>
-  )
-}
 
-export default Navbar
+      <Link href="/" className="flex items-center gap-2">
+        <div className="h-8 w-8 rounded-full bg-sky-500 flex items-center justify-center text-white shadow-sm shadow-sky-500/20">
+          <Terminal className="h-4 w-4 stroke-[2.5]" />
+        </div>
+        <span className="text-lg font-extrabold tracking-tight text-neutral-900 dark:text-white font-spaceGrotesk">
+          Dev<span className="text-sky-500">Flow</span>
+        </span>
+      </Link>
+
+      <div className="flex items-center gap-2">
+        <Theme />
+        <SignedIn>
+          <UserButton afterSignOutUrl="/" />
+        </SignedIn>
+      </div>
+    </nav>
+  );
+}

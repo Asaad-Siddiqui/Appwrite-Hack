@@ -1,82 +1,125 @@
 import QuestionCard from "@/components/cards/QuestionCard";
-import HomeFilters from "@/components/home/HomeFilters";
-import Filter from "@/components/shared/Filter";
 import NoResult from "@/components/shared/NoResult";
 import Pagination from "@/components/shared/Pagination";
-import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
-import { Button } from "@/components/ui/button";
-import { HomePageFilters } from "@/constants/filters";
 import { getQuestions, getRecommendedQuestions } from "@/lib/actions/question.action";
-import { SearchParamsProps } from "@/types";
 import Link from "next/link";
-import type { Metadata } from 'next';
+import Image from "next/image";
+import type { Metadata } from "next";
 import { auth } from "@/lib/actions/auth.action";
+import { Sparkles, Code, PenSquare } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: 'Home | Dev Overflow',
-}
+  title: "Home | DevFlow - Developer Community",
+};
 
 export default async function Home(props: { searchParams: Promise<any> | any }) {
   const resolvedSearchParams = await props.searchParams;
-  const { userId } = await auth();
+  const { user, userId } = await auth();
+
+  const currentFilter = resolvedSearchParams?.filter || "for_you";
 
   let result;
-
-  if(resolvedSearchParams?.filter === 'recommended') {
-    if(userId) {
+  if (currentFilter === "recommended") {
+    if (userId) {
       result = await getRecommendedQuestions({
         userId,
-        searchQuery: resolvedSearchParams.q,
-        page: resolvedSearchParams.page ? +resolvedSearchParams.page : 1,
-      }); 
+        searchQuery: resolvedSearchParams?.q,
+        page: resolvedSearchParams?.page ? +resolvedSearchParams.page : 1,
+      });
     } else {
-      result = {
-        questions: [],
-        isNext: false,
-      }
+      result = { questions: [], isNext: false };
     }
   } else {
     result = await getQuestions({
       searchQuery: resolvedSearchParams?.q,
-      filter: resolvedSearchParams?.filter,
+      filter: currentFilter === "for_you" ? undefined : currentFilter,
       page: resolvedSearchParams?.page ? +resolvedSearchParams.page : 1,
-    }); 
+    });
   }
 
+  const tabs = [
+    { label: "For you", filter: "for_you" },
+    { label: "Latest", filter: "newest" },
+    { label: "Unanswered", filter: "unanswered" },
+    { label: "Frequent", filter: "frequent" },
+  ];
+
   return (
-    <>
-      <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
-        <h1 className="h1-bold text-dark100_light900">All Questions</h1> 
+    <div className="flex flex-col min-h-screen">
+      {/* Top Sticky Header with X-style Navigation Tabs */}
+      <header className="sticky top-0 z-20 backdrop-blur-md bg-white/85 dark:bg-black/85 border-b border-neutral-200/80 dark:border-neutral-800/80 select-none">
+        <div className="flex items-center justify-between px-4 pt-3 pb-2">
+          <h1 className="text-xl font-bold tracking-tight text-neutral-900 dark:text-white font-spaceGrotesk flex items-center gap-2">
+            <span>Home</span>
+          </h1>
+          <Link
+            href="/ask-question"
+            className="flex items-center gap-1.5 py-1.5 px-3.5 rounded-full bg-sky-500 hover:bg-sky-600 text-white text-xs font-bold transition-colors shadow-sm"
+          >
+            <PenSquare className="h-3.5 w-3.5" />
+            <span>Ask</span>
+          </Link>
+        </div>
 
-        <Link href="/ask-question" className="flex justify-end max-sm:w-full">
-          <Button className="primary-gradient min-h-[46px] px-4 py-3 !text-light-900">
-            Ask a Question
-          </Button>
-        </Link> 
-      </div> 
+        {/* Timeline Tabs */}
+        <div className="flex border-t border-neutral-100 dark:border-neutral-900">
+          {tabs.map((tab) => {
+            const isActive = currentFilter === tab.filter;
+            const href = tab.filter === "for_you" ? "/" : `/?filter=${tab.filter}`;
 
-      <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
-        <LocalSearchbar 
-          route="/"
-          iconPosition="left"
-          imgSrc="/assets/icons/search.svg"
-          placeholder="Search for questions"
-          otherClasses="flex-1"
-        />
+            return (
+              <Link
+                key={tab.filter}
+                href={href}
+                className="flex-1 flex justify-center items-center py-3 hover:bg-neutral-50 dark:hover:bg-neutral-950/60 transition-colors relative"
+              >
+                <span
+                  className={`text-sm ${
+                    isActive
+                      ? "font-bold text-neutral-900 dark:text-white"
+                      : "font-medium text-neutral-500 dark:text-neutral-400"
+                  }`}
+                >
+                  {tab.label}
+                </span>
+                {isActive && (
+                  <div className="absolute bottom-0 h-1 w-12 sm:w-16 bg-sky-500 rounded-full" />
+                )}
+              </Link>
+            );
+          })}
+        </div>
+      </header>
 
-        <Filter
-          filters={HomePageFilters}
-          otherClasses="min-h-[56px] sm:min-w-[170px]"
-          containerClasses="hidden max-md:flex"
-        />
+      {/* Quick Question Composer Banner (X Tweet Composer Style) */}
+      <div className="border-b border-neutral-200/80 dark:border-neutral-800/80 p-4 bg-white dark:bg-black">
+        <div className="flex items-start gap-3">
+          <Image
+            src={
+              user?.picture ||
+              `https://api.dicebear.com/7.x/bottts/svg?seed=${user?.username || "dev"}`
+            }
+            alt="User"
+            width={40}
+            height={40}
+            className="rounded-full h-10 w-10 object-cover border border-neutral-200 dark:border-neutral-800 shrink-0"
+          />
+
+          <Link
+            href="/ask-question"
+            className="flex-1 flex items-center justify-between py-2.5 px-4 rounded-full bg-neutral-100 dark:bg-neutral-900 text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors text-sm cursor-text border border-transparent hover:border-neutral-300 dark:hover:border-neutral-700"
+          >
+            <span>What code problem are you working through today?</span>
+            <Code className="h-4 w-4 text-sky-500 shrink-0" />
+          </Link>
+        </div>
       </div>
 
-      <HomeFilters />
-
-      <div className="mt-10 flex w-full flex-col gap-6">
-        {result.questions.length > 0 ?
+      {/* Main Timeline of Questions */}
+      <div className="flex flex-col">
+        {result.questions && result.questions.length > 0 ? (
           result.questions.map((question: any) => (
-            <QuestionCard 
+            <QuestionCard
               key={question._id}
               _id={question._id}
               title={question.title}
@@ -88,19 +131,25 @@ export default async function Home(props: { searchParams: Promise<any> | any }) 
               createdAt={question.createdAt}
             />
           ))
-          : <NoResult 
-            title="There’s no question to show"
-            description="Be the first to break the silence! 🚀 Ask a Question and kickstart the discussion. our query could be the next big thing others learn from. Get involved! 💡"
-            link="/ask-question"
-            linkTitle="Ask a Question"
-          />}
+        ) : (
+          <div className="p-8">
+            <NoResult
+              title="No questions in this feed yet"
+              description="Be the first to start the discussion! Ask your question and get answers from developers worldwide."
+              link="/ask-question"
+              linkTitle="Ask a Question"
+            />
+          </div>
+        )}
       </div>
-      <div className="mt-10">
-        <Pagination 
+
+      {/* Bottom Pagination */}
+      <div className="p-4 border-t border-neutral-100 dark:border-neutral-900">
+        <Pagination
           pageNumber={resolvedSearchParams?.page ? +resolvedSearchParams.page : 1}
           isNext={result.isNext}
         />
       </div>
-    </>
-  )
+    </div>
+  );
 }
