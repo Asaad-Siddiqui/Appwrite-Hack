@@ -9,7 +9,7 @@ import UserCard from "@/components/cards/UserCard";
 import { Users as UsersIcon } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Community | DevFlow - Connect with Developers",
+  title: "Community | DevOverflow - Connect with Developers",
 };
 
 export default async function CommunityPage(props: {

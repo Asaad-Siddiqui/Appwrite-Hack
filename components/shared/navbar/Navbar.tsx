@@ -17,7 +17,7 @@ export default function Navbar() {
           <Terminal className="h-4 w-4 stroke-[2.5]" />
         </div>
         <span className="text-lg font-extrabold tracking-tight text-neutral-900 dark:text-white font-spaceGrotesk">
-          Dev<span className="text-sky-500">Flow</span>
+          Dev<span className="text-sky-500">Overflow</span>
         </span>
       </Link>
 

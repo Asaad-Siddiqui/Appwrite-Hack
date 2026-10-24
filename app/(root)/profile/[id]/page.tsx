@@ -121,7 +121,7 @@ export default async function ProfilePage(props: {
           </p>
         ) : (
           <p className="mt-3 text-sm text-neutral-400 italic">
-            Developer sharing knowledge and building solutions on DevFlow.
+            Developer sharing knowledge and building solutions on DevOverflow.
           </p>
         )}
 

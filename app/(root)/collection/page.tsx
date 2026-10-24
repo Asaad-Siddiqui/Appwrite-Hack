@@ -11,7 +11,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Bookmarks | DevFlow",
+  title: "Bookmarks | DevOverflow",
 };
 
 export default async function CollectionPage(props: {
@@ -22,22 +22,33 @@ export default async function CollectionPage(props: {
 
   if (!userId) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 text-center">
-        <div className="h-14 w-14 rounded-full bg-neutral-100 dark:bg-neutral-900 flex items-center justify-center text-neutral-500 mb-4">
-          <Lock className="h-6 w-6 text-sky-500" />
+      <div className="flex flex-col items-center justify-center p-12 sm:p-16 text-center">
+        <div className="relative mb-5 flex size-16 items-center justify-center rounded-2xl border border-sky-500/20 bg-sky-500/10 text-sky-500 shadow-xl shadow-sky-500/10">
+          <Bookmark className="size-8 stroke-[2.25]" />
+          <span className="absolute -bottom-1 -right-1 flex size-5 items-center justify-center rounded-full bg-neutral-900 border border-neutral-700 text-neutral-400">
+            <Lock className="size-3 text-sky-400" />
+          </span>
         </div>
-        <h2 className="text-xl font-bold text-neutral-900 dark:text-white">
-          Save posts for later
+        <h2 className="text-2xl font-extrabold tracking-tight text-neutral-900 dark:text-white font-spaceGrotesk">
+          Save discussions for later
         </h2>
-        <p className="text-sm text-neutral-500 max-w-sm mt-1.5">
-          Don&apos;t let the best code answers fly away! Bookmark questions to easily find them again.
+        <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400 max-w-sm leading-relaxed">
+          Build your personal library of debugging solutions, code patterns, and architectural discussions.
         </p>
-        <Link
-          href="/sign-in"
-          className="mt-5 rounded-full bg-sky-500 text-white font-bold text-sm py-2.5 px-6 hover:bg-sky-600 transition-colors"
-        >
-          Sign in to view Bookmarks
-        </Link>
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+          <Link
+            href="/sign-in"
+            className="rounded-full bg-sky-500 hover:bg-sky-600 text-white font-bold text-sm py-2.5 px-6 shadow-md shadow-sky-500/25 transition-all active:scale-[0.98]"
+          >
+            Sign in to view Bookmarks
+          </Link>
+          <Link
+            href="/"
+            className="rounded-full border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-900 text-neutral-800 dark:text-neutral-200 font-bold text-sm py-2.5 px-6 transition"
+          >
+            Explore Feed
+          </Link>
+        </div>
       </div>
     );
   }

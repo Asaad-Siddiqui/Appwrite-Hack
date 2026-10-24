@@ -65,7 +65,7 @@ export default function GlobalSearch() {
 
         <Input
           type="text"
-          placeholder="Search DevFlow..."
+          placeholder="Search DevOverflow..."
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);

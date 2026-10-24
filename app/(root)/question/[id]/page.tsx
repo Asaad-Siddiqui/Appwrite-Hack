@@ -71,16 +71,22 @@ export default async function QuestionDetails(props: {
             href={`/profile/${result.author.clerkId || result.author._id}`}
             className="flex items-center gap-3 group"
           >
-            <Image
-              src={avatarUrl}
-              className="rounded-full h-12 w-12 object-cover border border-neutral-200 dark:border-neutral-800 group-hover:opacity-90 transition-opacity"
-              width={48}
-              height={48}
-              alt={result.author.name || "Author"}
-            />
+            <div className="relative">
+              <Image
+                src={avatarUrl}
+                className="rounded-full size-12 object-cover border border-neutral-200 dark:border-neutral-800 group-hover:opacity-90 transition-opacity"
+                width={48}
+                height={48}
+                alt={result.author.name || "Author"}
+              />
+              <span className="absolute bottom-0 right-0 size-3 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-black" />
+            </div>
             <div className="flex flex-col">
-              <span className="font-bold text-base text-neutral-900 dark:text-white group-hover:underline">
-                {result.author.name}
+              <span className="font-bold text-base text-neutral-900 dark:text-white group-hover:underline flex items-center gap-1.5">
+                <span>{result.author.name}</span>
+                <span className="inline-flex items-center gap-0.5 rounded-full bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 text-[10px] font-bold text-neutral-600 dark:text-neutral-400">
+                  ⚡ {result.author.reputation || 150} rep
+                </span>
               </span>
               <span className="text-sm text-neutral-500 dark:text-neutral-400">
                 @{username}

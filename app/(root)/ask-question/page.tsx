@@ -8,7 +8,7 @@ import { ArrowLeft, PenSquare } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Ask a Question | DevFlow",
+  title: "Ask a Question | DevOverflow",
 };
 
 export default async function AskQuestionPage() {

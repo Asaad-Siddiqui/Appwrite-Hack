@@ -9,7 +9,7 @@ import { TrendingUp, Hash } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Explore Tags | DevFlow - Trending Technologies",
+  title: "Explore Tags | DevOverflow - Trending Technologies",
 };
 
 export default async function TagsPage(props: {
@@ -62,28 +62,40 @@ export default async function TagsPage(props: {
                 key={tag._id}
                 className="p-4 sm:px-6 sm:py-4 flex items-center justify-between hover:bg-neutral-50/80 dark:hover:bg-neutral-950/40 transition-colors group"
               >
-                <div className="flex flex-col gap-0.5">
-                  <span className="text-xs text-neutral-500 dark:text-neutral-400">
-                    Trending in Tech · #{idx + 1}
-                  </span>
-                  <div className="flex items-center gap-1.5 font-bold text-base sm:text-lg text-neutral-900 dark:text-white group-hover:text-sky-500 transition-colors">
-                    <Hash className="h-4 w-4 text-sky-500" />
-                    <span>{tag.name}</span>
+                <div className="flex flex-col gap-1 min-w-0 flex-1 pr-4">
+                  <div className="flex items-center gap-2 text-xs text-neutral-500">
+                    <span className="font-mono text-[10px] font-bold text-sky-500 bg-sky-500/10 px-1.5 py-0.5 rounded-full">
+                      #{idx + 1}
+                    </span>
+                    <span>Trending in Tech</span>
                   </div>
-                  {tag.description && (
-                    <p className="text-xs text-neutral-500 line-clamp-1 mt-0.5">
+                  <div className="flex items-center gap-1.5 font-bold text-base sm:text-lg text-neutral-900 dark:text-white group-hover:text-sky-500 transition-colors">
+                    <Hash className="size-4 text-sky-500" />
+                    <span>{tag.name.toLowerCase()}</span>
+                  </div>
+                  {tag.description ? (
+                    <p className="text-xs text-neutral-500 line-clamp-1">
                       {tag.description}
+                    </p>
+                  ) : (
+                    <p className="text-xs text-neutral-400 italic">
+                      Explore discussions, questions and solutions for #{tag.name.toLowerCase()}
                     </p>
                   )}
                 </div>
 
-                <div className="text-right">
-                  <span className="font-mono text-sm font-semibold text-neutral-700 dark:text-neutral-300">
-                    {count}
-                  </span>
-                  <p className="text-xs text-neutral-400">
-                    {count === 1 ? "question" : "questions"}
-                  </p>
+                <div className="flex items-center gap-3 shrink-0">
+                  <div className="text-right">
+                    <span className="font-mono text-sm font-bold text-neutral-900 dark:text-neutral-100">
+                      {count}
+                    </span>
+                    <p className="text-[11px] text-neutral-400">
+                      {count === 1 ? "discussion" : "discussions"}
+                    </p>
+                  </div>
+                  <div className="hidden sm:flex size-7 items-center justify-center rounded-full bg-neutral-100 dark:bg-neutral-900 text-neutral-400 group-hover:text-sky-500 group-hover:translate-x-0.5 transition-all">
+                    →
+                  </div>
                 </div>
               </Link>
             );

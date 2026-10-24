@@ -9,7 +9,7 @@ import { auth } from "@/lib/actions/auth.action";
 import { Sparkles, Code, PenSquare } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Home | DevFlow - Developer Community",
+  title: "Home | DevOverflow - Developer Community",
 };
 
 export default async function Home(props: { searchParams: Promise<any> | any }) {
@@ -91,27 +91,61 @@ export default async function Home(props: { searchParams: Promise<any> | any }) 
         </div>
       </header>
 
-      {/* Quick Question Composer Banner (X Tweet Composer Style) */}
-      <div className="border-b border-neutral-200/80 dark:border-neutral-800/80 p-4 bg-white dark:bg-black">
-        <div className="flex items-start gap-3">
-          <Image
-            src={
-              user?.picture ||
-              `https://api.dicebear.com/7.x/bottts/svg?seed=${user?.username || "dev"}`
-            }
-            alt="User"
-            width={40}
-            height={40}
-            className="rounded-full h-10 w-10 object-cover border border-neutral-200 dark:border-neutral-800 shrink-0"
-          />
+      {/* Quick Developer Composer Banner */}
+      <div className="border-b border-neutral-200/80 dark:border-neutral-800/80 p-4 sm:p-5 bg-white dark:bg-black">
+        <div className="flex items-start gap-3.5">
+          <div className="relative shrink-0">
+            <Image
+              src={
+                user?.picture ||
+                `https://api.dicebear.com/7.x/bottts/svg?seed=${user?.username || "dev"}`
+              }
+              alt="User"
+              width={42}
+              height={42}
+              className="size-10 sm:size-11 rounded-full object-cover border border-neutral-200 dark:border-neutral-800"
+            />
+            <span className="absolute bottom-0 right-0 size-2.5 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-black" />
+          </div>
 
-          <Link
-            href="/ask-question"
-            className="flex-1 flex items-center justify-between py-2.5 px-4 rounded-full bg-neutral-100 dark:bg-neutral-900 text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors text-sm cursor-text border border-transparent hover:border-neutral-300 dark:hover:border-neutral-700"
-          >
-            <span>What code problem are you working through today?</span>
-            <Code className="h-4 w-4 text-sky-500 shrink-0" />
-          </Link>
+          <div className="flex-1 flex flex-col gap-3">
+            <Link
+              href="/ask-question"
+              className="w-full text-sm sm:text-base text-neutral-500 dark:text-neutral-400 cursor-text py-1 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors"
+            >
+              What code problem or architecture are you debugging today?
+            </Link>
+
+            {/* Quick composer action toolbar */}
+            <div className="flex items-center justify-between border-t border-neutral-100 dark:border-neutral-900 pt-3 text-xs">
+              <div className="flex items-center gap-3 text-sky-500">
+                <Link
+                  href="/ask-question"
+                  className="flex items-center gap-1.5 rounded-full px-2.5 py-1 hover:bg-sky-500/10 transition font-medium"
+                >
+                  <Code className="size-3.5" />
+                  <span className="text-[11px]">Snippet</span>
+                </Link>
+                <Link
+                  href="/ask-question"
+                  className="flex items-center gap-1.5 rounded-full px-2.5 py-1 hover:bg-sky-500/10 transition font-medium"
+                >
+                  <span className="font-bold">#</span>
+                  <span className="text-[11px]">Tags</span>
+                </Link>
+                <span className="hidden sm:inline-flex items-center gap-1 text-[11px] text-neutral-400 font-mono">
+                  Markdown enabled
+                </span>
+              </div>
+
+              <Link
+                href="/ask-question"
+                className="rounded-full bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs py-1.5 px-4 shadow-sm shadow-sky-500/20 transition-all active:scale-[0.98]"
+              >
+                Post Question
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
 

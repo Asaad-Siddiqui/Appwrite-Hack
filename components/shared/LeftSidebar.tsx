@@ -46,7 +46,7 @@ export default function LeftSidebar() {
             <Terminal className="h-5 w-5 stroke-[2.5]" />
           </div>
           <span className="text-xl font-extrabold tracking-tight text-neutral-900 dark:text-white max-lg:hidden font-spaceGrotesk">
-            Dev<span className="text-sky-500">Flow</span>
+            Dev<span className="text-sky-500">Overflow</span>
           </span>
         </Link>
 
@@ -135,20 +135,20 @@ export default function LeftSidebar() {
         </SignedIn>
 
         <SignedOut>
-          <div className="flex flex-col gap-2 max-lg:items-center">
+          <div className="flex flex-col gap-2.5 max-lg:items-center">
             <Link
               href="/sign-in"
-              className="w-full py-2.5 px-4 text-center rounded-full border border-neutral-300 dark:border-neutral-700 text-sm font-bold text-neutral-900 dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-colors"
+              className="w-full py-2.5 px-4 text-center rounded-full border border-neutral-300 dark:border-neutral-700 text-xs sm:text-sm font-bold text-neutral-900 dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-colors"
             >
-              <span className="max-lg:hidden">Log in</span>
+              <span className="max-lg:hidden">Sign In</span>
               <span className="lg:hidden text-xs">In</span>
             </Link>
             <Link
               href="/sign-up"
-              className="w-full py-2.5 px-4 text-center rounded-full bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-bold hover:opacity-90 transition-opacity"
+              className="w-full py-2.5 px-4 text-center rounded-full bg-sky-500 hover:bg-sky-600 text-white text-xs sm:text-sm font-bold shadow-md shadow-sky-500/20 transition-all active:scale-[0.99]"
             >
-              <span className="max-lg:hidden">Sign up</span>
-              <span className="lg:hidden text-xs">Up</span>
+              <span className="max-lg:hidden">Create Account</span>
+              <span className="lg:hidden text-xs">Join</span>
             </Link>
           </div>
         </SignedOut>

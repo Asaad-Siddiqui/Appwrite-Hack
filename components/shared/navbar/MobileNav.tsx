@@ -61,7 +61,7 @@ export default function MobileNav() {
               <Terminal className="h-5 w-5 stroke-[2.5]" />
             </div>
             <span className="text-xl font-extrabold text-neutral-900 dark:text-white font-spaceGrotesk">
-              Dev<span className="text-sky-500">Flow</span>
+              Dev<span className="text-sky-500">Overflow</span>
             </span>
           </Link>
 
