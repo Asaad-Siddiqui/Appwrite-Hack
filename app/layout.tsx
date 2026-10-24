@@ -13,7 +13,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <body>
         <header className="topbar">
-          <Link href="/" className="brand">🔧 LendLoop</Link>
+          <Link href="/" className="brand">🔧 Lend<span>Loop</span></Link>
           <nav>
             <Link href="/items">Browse tools</Link>
             <Link href="/loans">My loans</Link>
@@ -23,6 +23,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         </header>
         <main className="wrap">{children}</main>
         <footer className="foot">
+          <strong>LendLoop</strong> — a shared shed for one neighbourhood.{" "}
+          <Link href="/items">Browse tools</Link> · <Link href="/overdue">Overdue</Link> · <Link href="/members">Members</Link>
+          <br />
           Demo data only — fictional neighbours, no real people, no payments.
           Built on Appwrite TablesDB (database: lendloop).
         </footer>

@@ -6,6 +6,7 @@ import {
   type Item, type Member, type Loan, type Reservation,
 } from "../../../lib/appwrite";
 import MemberPicker, { useDemoMember } from "../../../components/MemberPicker";
+import { EmptyState, ErrorBanner, catClass, catIcon } from "../../../components/Ui";
 
 export default function ItemDetail({ params }: { params: { id: string } }) {
   const [item, setItem] = useState<Item | null>(null);
@@ -26,8 +27,8 @@ export default function ItemDetail({ params }: { params: { id: string } }) {
     } catch (e) { setErr(String((e as Error)?.message ?? e)); }
   };
   useEffect(() => { load(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  if (err) return <p className="error">{err}</p>;
-  if (!item) return <p>Loading…</p>;
+  if (err) return (<><Link href="/items">← All tools</Link><ErrorBanner err={err} /></>);
+  if (!item) return <p className="mut">Loading tool…</p>;
   const activeLoan = loans.find((l) => l.status === "active");
   const activeRes = reservations.find((r) => r.status === "active");
   const doBorrow = async () => {
@@ -51,31 +52,42 @@ export default function ItemDetail({ params }: { params: { id: string } }) {
   return (
     <>
       <Link href="/items">← All tools</Link>
-      <h1>{item.name}</h1>
-      <p className="mut">{item.category} · {item.condition} · Owner: {owner?.name ?? item.ownerMemberId} ({owner?.neighbourhood})</p>
-      <p>{item.description}</p>
-      <p>Status: <span className={`badge ${item.status}`}>{item.status}</span></p>
-      {activeLoan && <p>Currently on loan — due {new Date(activeLoan.dueAt).toLocaleDateString()}.</p>}
-      {activeRes && <p>There is an active reservation for this tool.</p>}
-      <MemberPicker memberId={memberId} members={members} pick={pick} />
-      <div className="row">
-        <button className="btn" disabled={busy || item.status !== "available" || !memberId} onClick={doBorrow}>
-          {item.status === "available" ? "Borrow for 7 days" : "Not available to borrow"}
-        </button>
-        <button className="btn secondary" disabled={busy || !memberId || item.status === "available"} onClick={doReserve}>
-          Reserve this tool
-        </button>
+      <div className="detail">
+        <div className={`card-head ${catClass(item.category)}`} style={{ borderRadius: 12 }}>
+          {catIcon(item.category)}
+          <small>{item.category}</small>
+        </div>
+        <h1>{item.name}</h1>
+        <p>{item.description}</p>
+        <div className="detail-grid">
+          <div><span>Condition</span><strong>{item.condition}</strong></div>
+          <div><span>Owner</span><strong>{owner?.name ?? item.ownerMemberId}</strong><br /><span>{owner?.neighbourhood}</span></div>
+          <div><span>Status</span><span className={`badge ${item.status}`}>{item.status}</span></div>
+        </div>
+        {activeLoan && <p>Currently on loan — due {new Date(activeLoan.dueAt).toLocaleDateString()}.</p>}
+        {activeRes && <p>There is an active reservation for this tool.</p>}
+        <MemberPicker memberId={memberId} members={members} pick={pick} />
+        <div className="row">
+          <button className="btn" disabled={busy || item.status !== "available" || !memberId} onClick={doBorrow}>
+            {item.status === "available" ? "Borrow for 7 days" : "Not available to borrow"}
+          </button>
+          <button className="btn secondary" disabled={busy || !memberId || item.status === "available"} onClick={doReserve}>
+            Reserve this tool
+          </button>
+        </div>
+        {item.status === "available" && <p className="mut">Tip: Reserve is for tools that are borrowed or reserved — an available tool can be borrowed straight away.</p>}
+        {msg && <p className="ok">{msg}</p>}
+        <ErrorBanner err={err} />
       </div>
-      {item.status === "available" && <p className="mut">Tip: Reserve is for tools that are borrowed or reserved — an available tool can be borrowed straight away.</p>}
-      {msg && <p className="ok">{msg}</p>}
-      {err && <p className="error">{err}</p>}
       <h2>Loan history for this tool</h2>
       {loans.length ? (
-        <table><thead><tr><th>Borrower</th><th>Borrowed</th><th>Due</th><th>Status</th></tr></thead>
-        <tbody>{loans.map((l) => (
-          <tr key={l.$id}><td>{l.borrowerMemberId}</td><td>{new Date(l.borrowedAt).toLocaleDateString()}</td><td>{new Date(l.dueAt).toLocaleDateString()}</td><td>{l.status}</td></tr>
-        ))}</tbody></table>
-      ) : <p>No loans yet.</p>}
+        <div className="tablewrap">
+          <table><thead><tr><th>Borrower</th><th>Borrowed</th><th>Due</th><th>Status</th></tr></thead>
+          <tbody>{loans.map((l) => (
+            <tr key={l.$id}><td>{l.borrowerMemberId}</td><td>{new Date(l.borrowedAt).toLocaleDateString()}</td><td>{new Date(l.dueAt).toLocaleDateString()}</td><td><span className={`badge ${l.status === "active" ? "borrowed" : ""}`}>{l.status}</span></td></tr>
+          ))}</tbody></table>
+        </div>
+      ) : <EmptyState title="No loans yet" hint="Be the first neighbour to borrow this tool." />}
     </>
   );
 }

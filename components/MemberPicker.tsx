@@ -32,15 +32,17 @@ export default function MemberPicker({
 }) {
   if (!members.length) return <p className="mut">Loading demo members…</p>;
   return (
-    <label className="row">
-      <span><strong>Demo member:</strong> (not real login — pick a fictional neighbour to borrow as)</span>
-      <select value={memberId} onChange={(e) => pick(e.target.value)}>
-        {members.map((m) => (
-          <option key={m.$id} value={m.$id}>
-            {m.name} — {m.neighbourhood}
-          </option>
-        ))}
-      </select>
-    </label>
+    <div className="picker">
+      <label className="row" style={{ margin: 0 }}>
+        <span><strong>👤 Demo member:</strong> (not real login — pick a fictional neighbour to borrow as)</span>
+        <select value={memberId} onChange={(e) => pick(e.target.value)} aria-label="Demo member">
+          {members.map((m) => (
+            <option key={m.$id} value={m.$id}>
+              {m.name} — {m.neighbourhood}
+            </option>
+          ))}
+        </select>
+      </label>
+    </div>
   );
 }
