@@ -32,8 +32,7 @@ export default function SignUpForm() {
       if (!res.success) {
         setError(res.error || "Failed to create account. Please try again.");
       } else {
-        router.push("/");
-        router.refresh();
+        window.location.href = "/";
       }
     } catch (err: any) {
       setError(err?.message || "Something went wrong. Please try again.");

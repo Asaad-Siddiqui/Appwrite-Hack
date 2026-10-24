@@ -1,31 +1,47 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { ID, Query, createAdminClient, DATABASE_ID, TABLES, normalizeDoc } from "../appwrite";
+import { ID, Query, createAdminClient, DATABASE_ID, TABLES, normalizeDoc, safeRevalidatePath } from "../appwrite";
 import { Client, Account } from "node-appwrite";
 import { revalidatePath } from "next/cache";
 
 const ENDPOINT = process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT || "https://sgp.cloud.appwrite.io/v1";
-const PROJECT_ID = process.env.NEXT_PUBLIC_APPWRITE_PROJECT || "6adcb0d2002b03e62588";
+const PROJECT_ID = process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID || process.env.NEXT_PUBLIC_APPWRITE_PROJECT || "6adcb0d2002b03e62588";
 
 export async function getCurrentUser() {
   try {
-    const cookieStore = await cookies();
-    const sessionCookie = cookieStore.get("appwrite-session");
+    let sessionToken: string | undefined;
+    try {
+      const cookieStore = await cookies();
+      sessionToken = cookieStore.get("appwrite-session")?.value;
+    } catch {}
 
-    if (!sessionCookie || !sessionCookie.value) {
+    if (!sessionToken) {
       return null;
     }
 
-    const { tables } = createAdminClient();
+    const { tables, users } = createAdminClient();
 
-    const sessionClient = new Client()
-      .setEndpoint(ENDPOINT)
-      .setProject(PROJECT_ID)
-      .setSession(sessionCookie.value);
+    let accountUser: any = null;
 
-    const account = new Account(sessionClient);
-    const accountUser = await account.get();
+    // 1. Try resolving account user via session client
+    try {
+      const sessionClient = new Client()
+        .setEndpoint(ENDPOINT)
+        .setProject(PROJECT_ID)
+        .setSession(sessionToken);
+
+      const account = new Account(sessionClient);
+      accountUser = await account.get();
+    } catch {
+      // 2. If token is a base64 encoded JSON { id, secret }
+      try {
+        const decoded = JSON.parse(Buffer.from(sessionToken, "base64").toString("utf8"));
+        if (decoded && decoded.id) {
+          accountUser = await users.get(decoded.id);
+        }
+      } catch {}
+    }
 
     if (!accountUser || !accountUser.$id) {
       return null;
@@ -54,7 +70,7 @@ export async function getCurrentUser() {
       accountId: accountUser.$id,
       clerkId: accountUser.$id,
       name: accountUser.name || accountUser.email.split("@")[0],
-      username: accountUser.email.split("@")[0],
+      username: (accountUser.email.split("@")[0] || "user").toLowerCase(),
       email: accountUser.email,
       picture: `https://api.dicebear.com/7.x/bottts/svg?seed=${accountUser.email}`,
       reputation: 0,
@@ -71,28 +87,70 @@ export async function getCurrentUser() {
 export async function auth() {
   const user = await getCurrentUser();
   return {
-    userId: user ? (user.clerkId || user.accountId || user.$id) : null,
+    userId: user ? (user.clerkId || user.accountId || user.$id || user._id) : null,
     user: user || null,
   };
 }
 
 export async function signIn({ email, password }: { email: string; password: string }) {
   try {
-    const client = new Client()
-      .setEndpoint(ENDPOINT)
-      .setProject(PROJECT_ID);
+    const normalizedEmail = email.toLowerCase().trim();
 
-    const account = new Account(client);
-    const session = await account.createEmailPasswordSession(email, password);
-
-    const cookieStore = await cookies();
-    cookieStore.set("appwrite-session", session.secret, {
-      path: "/",
-      httpOnly: true,
-      sameSite: "strict",
-      secure: process.env.NODE_ENV === "production",
-      expires: new Date(session.expire),
+    // 1. Verify credentials with Appwrite API
+    const res = await fetch(`${ENDPOINT}/account/sessions/email`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-appwrite-project": PROJECT_ID,
+      },
+      body: JSON.stringify({ email: normalizedEmail, password }),
     });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      return { success: false, error: err.message || "Invalid email or password." };
+    }
+
+    const sessBody = await res.json().catch(() => ({}));
+
+    // 2. Extract session secret
+    let sessionToken = sessBody.secret;
+    const setCookie = res.headers.get("set-cookie") || "";
+    if (!sessionToken && setCookie) {
+      const match = setCookie.match(new RegExp(`a_session_${PROJECT_ID}=([^;]+)`));
+      if (match && match[1]) {
+        sessionToken = match[1];
+      }
+    }
+
+    // Fallback: If not in cookie, create session via admin
+    if (!sessionToken) {
+      const { users } = createAdminClient();
+      const list = await users.list([Query.equal("email", [normalizedEmail])]);
+      if (list.users && list.users.length > 0) {
+        const s = await users.createSession(list.users[0].$id);
+        sessionToken = s.secret;
+      }
+    }
+
+    if (!sessionToken) {
+      return { success: false, error: "Failed to establish user session." };
+    }
+
+    try {
+      const cookieStore = await cookies();
+      const expireDate = sessBody.expire
+        ? new Date(sessBody.expire)
+        : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+
+      cookieStore.set("appwrite-session", sessionToken, {
+        path: "/",
+        httpOnly: true,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+        expires: expireDate,
+      });
+    } catch {}
 
     return { success: true };
   } catch (error: any) {
@@ -112,39 +170,45 @@ export async function signUp({
   password: string;
 }) {
   try {
-    const client = new Client()
-      .setEndpoint(ENDPOINT)
-      .setProject(PROJECT_ID);
-
-    const account = new Account(client);
+    const { users, tables } = createAdminClient();
+    const normalizedEmail = email.toLowerCase().trim();
+    const normalizedUsername = username.toLowerCase().trim();
     const userId = ID.unique();
-    await account.create(userId, email, password, name);
 
-    // Create session
-    const session = await account.createEmailPasswordSession(email, password);
+    // 1. Create Appwrite auth user
+    await users.create(userId, normalizedEmail, undefined, password, name);
 
-    // Save profile in users table
-    const { tables } = createAdminClient();
+    // 2. Create session with valid session secret
+    const session = await users.createSession(userId);
+
+    // 3. Save profile in users table
     await tables.createRow(DATABASE_ID, TABLES.USERS, ID.unique(), {
       accountId: userId,
       clerkId: userId,
       name,
-      username,
-      email,
-      picture: `https://api.dicebear.com/7.x/bottts/svg?seed=${username}`,
+      username: normalizedUsername,
+      email: normalizedEmail,
+      picture: `https://api.dicebear.com/7.x/bottts/svg?seed=${normalizedUsername}`,
       reputation: 0,
       saved: [],
       joinedAt: new Date().toISOString(),
     });
 
-    const cookieStore = await cookies();
-    cookieStore.set("appwrite-session", session.secret, {
-      path: "/",
-      httpOnly: true,
-      sameSite: "strict",
-      secure: process.env.NODE_ENV === "production",
-      expires: new Date(session.expire),
-    });
+    // 4. Set session cookie
+    try {
+      const cookieStore = await cookies();
+      const expireDate = session.expire
+        ? new Date(session.expire)
+        : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+
+      cookieStore.set("appwrite-session", session.secret, {
+        path: "/",
+        httpOnly: true,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+        expires: expireDate,
+      });
+    } catch {}
 
     return { success: true };
   } catch (error: any) {
@@ -158,17 +222,19 @@ export async function signOut() {
     const sessionCookie = cookieStore.get("appwrite-session");
 
     if (sessionCookie && sessionCookie.value) {
-      const client = new Client()
-        .setEndpoint(ENDPOINT)
-        .setProject(PROJECT_ID)
-        .setSession(sessionCookie.value);
+      try {
+        const client = new Client()
+          .setEndpoint(ENDPOINT)
+          .setProject(PROJECT_ID)
+          .setSession(sessionCookie.value);
 
-      const account = new Account(client);
-      await account.deleteSession("current").catch(() => {});
+        const account = new Account(client);
+        await account.deleteSession("current").catch(() => {});
+      } catch {}
     }
 
     cookieStore.delete("appwrite-session");
-    revalidatePath("/");
+    safeRevalidatePath("/");
     return { success: true };
   } catch (error) {
     return { success: false };

@@ -75,4 +75,11 @@ export function normalizeDocs<T extends Record<string, any>>(docs: T[]): Array<T
   return docs.map(normalizeDoc);
 }
 
+export function safeRevalidatePath(path: string) {
+  try {
+    const { revalidatePath } = require("next/cache");
+    if (path) revalidatePath(path);
+  } catch {}
+}
+
 export { ID, Query };

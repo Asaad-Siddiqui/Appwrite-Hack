@@ -73,8 +73,7 @@ export function AuthProvider({
   const logout = async () => {
     await signOut();
     setUser(null);
-    router.push("/sign-in");
-    router.refresh();
+    window.location.href = "/sign-in";
   };
 
   const userId = user ? (user.clerkId || user.accountId || user._id) : null;
@@ -144,8 +143,7 @@ export function UserButton({
 
   const handleSignOut = async () => {
     await signOut();
-    router.push(afterSignOutUrl);
-    router.refresh();
+    window.location.href = afterSignOutUrl || "/";
   };
 
   const avatarUrl = user.picture || `https://api.dicebear.com/7.x/bottts/svg?seed=${user.username || "dev"}`;

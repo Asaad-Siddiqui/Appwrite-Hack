@@ -33,6 +33,7 @@ declare module "node-appwrite" {
     list(queries?: string[]): Promise<any>;
     get(userId: string): Promise<any>;
     create(userId: string, email?: string, phone?: string, password?: string, name?: string): Promise<any>;
+    createSession(userId: string): Promise<any>;
     delete(userId: string): Promise<any>;
   }
   export class Storage {

@@ -24,8 +24,7 @@ export default function SignInForm() {
       if (!res.success) {
         setError(res.error || "Failed to sign in. Please check your credentials.");
       } else {
-        router.push("/");
-        router.refresh();
+        window.location.href = "/";
       }
     } catch (err: any) {
       setError(err?.message || "Something went wrong. Please try again.");

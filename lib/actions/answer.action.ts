@@ -15,6 +15,7 @@ import {
   Query,
   normalizeDoc,
   normalizeDocs,
+  safeRevalidatePath,
 } from "../appwrite";
 import { getUserById } from "./user.action";
 
@@ -64,7 +65,7 @@ export async function createAnswer(params: CreateAnswerParams) {
       }).catch(() => {});
     }
 
-    if (path) revalidatePath(path);
+    safeRevalidatePath(path);
     return normalizeDoc(newAnswer);
   } catch (error) {
     console.error("Error in createAnswer:", error);
@@ -150,7 +151,7 @@ export async function upvoteAnswer(params: AnswerVoteParams) {
       downvotes,
     });
 
-    if (path) revalidatePath(path);
+    safeRevalidatePath(path);
   } catch (error) {
     console.error("Error in upvoteAnswer:", error);
     throw error;
@@ -182,7 +183,7 @@ export async function downvoteAnswer(params: AnswerVoteParams) {
       downvotes,
     });
 
-    if (path) revalidatePath(path);
+    safeRevalidatePath(path);
   } catch (error) {
     console.error("Error in downvoteAnswer:", error);
     throw error;
@@ -209,7 +210,7 @@ export async function deleteAnswer(params: DeleteAnswerParams) {
       await tables.deleteRow(DATABASE_ID, TABLES.ANSWERS, answerId);
     }
 
-    if (path) revalidatePath(path);
+    safeRevalidatePath(path);
   } catch (error) {
     console.error("Error in deleteAnswer:", error);
   }

@@ -21,6 +21,7 @@ import {
   Query,
   normalizeDoc,
   normalizeDocs,
+  safeRevalidatePath,
 } from "../appwrite";
 
 export async function getUserById(params: any) {
@@ -39,6 +40,20 @@ export async function getUserById(params: any) {
     if (!result.rows || result.rows.length === 0) {
       result = await tables.listRows(DATABASE_ID, TABLES.USERS, [
         Query.equal("accountId", [userId]),
+        Query.limit(1),
+      ]);
+    }
+
+    if (!result.rows || result.rows.length === 0) {
+      result = await tables.listRows(DATABASE_ID, TABLES.USERS, [
+        Query.equal("email", [userId]),
+        Query.limit(1),
+      ]);
+    }
+
+    if (!result.rows || result.rows.length === 0) {
+      result = await tables.listRows(DATABASE_ID, TABLES.USERS, [
+        Query.equal("username", [userId]),
         Query.limit(1),
       ]);
     }
@@ -184,7 +199,7 @@ export async function toggleSaveQuestion(params: ToggleSaveQuestionParams) {
 
     await tables.updateRow(DATABASE_ID, TABLES.USERS, user.$id, { saved });
 
-    if (path) revalidatePath(path);
+    safeRevalidatePath(path);
   } catch (error) {
     console.error("Error in toggleSaveQuestion:", error);
     throw error;
