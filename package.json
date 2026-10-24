@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "node scripts/patch-node-appwrite.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.1",
@@ -47,5 +48,9 @@
   },
   "devDependencies": {
     "@types/prismjs": "^1.26.1"
+  },
+  "overrides": {
+    "react": "$react",
+    "react-dom": "$react-dom"
   }
 }
