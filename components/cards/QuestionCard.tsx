@@ -6,7 +6,7 @@ import React from "react";
 import { formatAndDivideNumber, getTimestamp } from "@/lib/utils";
 import { SignedIn } from "@/context/AuthContext";
 import EditDeleteAction from "../shared/EditDeleteAction";
-import { MessageSquare, ArrowBigUp, Eye, Bookmark, Share2, CheckCircle2 } from "lucide-react";
+import { MessageSquare, ArrowBigUp, Eye, Bookmark, Share2, CheckCircle2, Zap } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 interface QuestionProps {
@@ -55,7 +55,7 @@ export default function QuestionCard({
     if (typeof window !== "undefined") {
       navigator.clipboard.writeText(`${window.location.origin}/question/${_id}`);
       toast({
-        title: "Thread link copied! 📋",
+        title: "Thread link copied",
         description: "You can now share this discussion with your team.",
       });
     }
@@ -96,8 +96,9 @@ export default function QuestionCard({
               </span>
 
               {/* Developer Reputation Chip */}
-              <span className="inline-flex items-center gap-0.5 rounded-full bg-neutral-100 dark:bg-neutral-800/80 px-2 py-0.5 text-[10px] font-bold text-neutral-600 dark:text-neutral-400">
-                ⚡ {formatAndDivideNumber(author?.reputation || 120)}
+              <span className="inline-flex items-center gap-1 rounded-full bg-neutral-100 dark:bg-neutral-800/80 px-2 py-0.5 text-[10px] font-bold text-neutral-600 dark:text-neutral-400">
+                <Zap className="size-2.5 text-amber-500 fill-amber-500" />
+                <span>{formatAndDivideNumber(author?.reputation || 120)} rep</span>
               </span>
 
               <span className="text-neutral-300 dark:text-neutral-700">·</span>

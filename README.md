@@ -13,13 +13,13 @@
 
 **DevOverflow** is a high-taste, real-time developer community and technical question-answering platform. Built from the ground up on **Next.js 16 (React 19)** and **Appwrite Cloud TablesDB**, it bridges the gap between the speed of modern social feeds and the structured depth of technical documentation.
 
-[Explore Feed](http://localhost:3000) · [Architecture](#-system-architecture) · [Features](#-core-features) · [Appwrite Schema](#-appwrite-tablesdb-architecture) · [Getting Started](#-getting-started)
+[Explore Feed](http://localhost:3000) · [Architecture](#system-architecture) · [Features](#core-features) · [Appwrite Schema](#appwrite-tablesdb-architecture) · [Getting Started](#getting-started)
 
 </div>
 
 ---
 
-## 💡 The Purpose & Vision
+## The Purpose & Vision
 
 Traditional engineering forums are rigid, slow, and visually dated. Developers spend hours searching through bloated pages when they need fast, clear answers, live code discussions, and peer review from verified engineers.
 
@@ -30,7 +30,7 @@ Traditional engineering forums are rigid, slow, and visually dated. Developers s
 
 ---
 
-## 📸 Product Showcases
+## Product Showcases
 
 ### Real-Time Developer Feed & Thread Stream
 ![DevOverflow App Showcase](public/assets/images/feed-showcase.png)
@@ -44,36 +44,36 @@ Traditional engineering forums are rigid, slow, and visually dated. Developers s
 
 ---
 
-## ⚡ Core Features
+## Core Features
 
-### 1. 🧵 Fast Stream & Timeline Feed
+### 1. Fast Stream & Timeline Feed
 - **3-Column Architecture**: Bounded desktop grid (`max-w-[1260px]`) featuring a left navigation rail, center stream (`max-w-[680px]`), and right widget sidebar.
 - **Timeline Filtering**: Instant tab switching between `"For you"`, `"Latest"`, `"Unanswered"`, and `"Frequent"`.
 - **Developer Micro-Composer**: Quick question prompt directly in the stream with code snippet shortcuts, `#tag` inserter, and markdown support.
 
-### 2. 💬 Discussion Threads & AI Assistance
+### 2. Discussion Threads & AI Assistance
 - **Interactive Action Bar**: Native copy-to-clipboard thread sharing with toast feedback, upvote/downvote counters, and bookmarking.
 - **AI Answer Assistant**: Integrated OpenAI / ChatGPT helper that synthesizes automated solutions with code examples at the press of a button.
 - **Syntax Highlighting**: Built-in Prism.js highlighting supporting over 20 languages (TypeScript, Python, Go, Rust, SQL, and more).
 
-### 3. 🛡️ Native Appwrite Authentication & Sessions
+### 3. Native Appwrite Authentication & Sessions
 - **Zero Third-Party Vendor Bloat**: Powered entirely by Appwrite Cloud Users & Sessions API.
 - **Encrypted HTTP-Only Cookies**: Secure session token persistence across server and client components with automated redirect guards.
 - **Context-Aware Navigation**: Universal `<SignedIn>` and `<SignedOut>` components with live user switcher and avatar indicators.
 
-### 4. 🏆 Developer Reputation & Verified Badges
-- **Reputation Engine**: Developers earn reputation points (`⚡ 150 rep`) based on answer upvotes and helpful community contributions.
+### 4. Developer Reputation & Verified Badges
+- **Reputation Engine**: Developers earn reputation points based on answer upvotes and helpful community contributions.
 - **Medal Badges**: Dynamic calculation of **Gold**, **Silver**, and **Bronze** badges displayed across user profiles and cards.
 - **Verified Engineer Status**: Distinguish active developers with verified checkmarks and stack tags.
 
-### 5. 🏷️ Trending Tech & Developer Directory
+### 5. Trending Tech & Developer Directory
 - **Explore Trends**: Ranked tech topics (`#1 Trending in Tech`) with discussion counts and technology descriptions.
 - **Community Who to Follow**: Searchable directory of developers, filterable by reputation, join date, and active stack.
 - **Saved Bookmarks**: Secure personal vault for saving critical solutions for future reference.
 
 ---
 
-## 🏗️ System Architecture
+## System Architecture
 
 ```mermaid
 flowchart TD
@@ -95,7 +95,7 @@ flowchart TD
 
 ---
 
-## 🗄️ Appwrite TablesDB Architecture
+## Appwrite TablesDB Architecture
 
 DevOverflow is powered by Appwrite Cloud **TablesDB** (`6adcb48000343a1edbc5`) in the Singapore (`sgp.cloud.appwrite.io`) region.
 
@@ -117,7 +117,7 @@ DevOverflow is powered by Appwrite Cloud **TablesDB** (`6adcb48000343a1edbc5`) i
 
 ---
 
-## 🛠️ Tech Stack Overview
+## Tech Stack Overview
 
 | Layer | Technology | Description |
 | :--- | :--- | :--- |
@@ -133,7 +133,7 @@ DevOverflow is powered by Appwrite Cloud **TablesDB** (`6adcb48000343a1edbc5`) i
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### 1. Prerequisites
 - **Node.js**: `v20.x` or `v22.x`
@@ -189,7 +189,7 @@ npm run start
 
 ---
 
-## 🔒 Security & Performance Features
+## Security & Performance Features
 
 - **SSR Cookie Sessions**: Authentication tokens are stored exclusively in HTTP-only, secure, `SameSite=Strict` cookies.
 - **Server Actions with Optimistic UI**: Instant vote updates and bookmark toggling without full-page reloads.
@@ -198,6 +198,6 @@ npm run start
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License. Built with passion for the developer community and powered by **Appwrite TablesDB**.

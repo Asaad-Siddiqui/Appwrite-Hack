@@ -9,7 +9,7 @@ import { auth } from "@/lib/actions/auth.action";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { ArrowLeft, MessageSquare, Eye } from "lucide-react";
+import { ArrowLeft, MessageSquare, Eye, Zap } from "lucide-react";
 
 export default async function QuestionDetails(props: {
   params: Promise<{ id: string }> | { id: string };
@@ -84,8 +84,9 @@ export default async function QuestionDetails(props: {
             <div className="flex flex-col">
               <span className="font-bold text-base text-neutral-900 dark:text-white group-hover:underline flex items-center gap-1.5">
                 <span>{result.author.name}</span>
-                <span className="inline-flex items-center gap-0.5 rounded-full bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 text-[10px] font-bold text-neutral-600 dark:text-neutral-400">
-                  ⚡ {result.author.reputation || 150} rep
+                <span className="inline-flex items-center gap-1 rounded-full bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 text-[10px] font-bold text-neutral-600 dark:text-neutral-400">
+                  <Zap className="size-2.5 text-amber-500 fill-amber-500" />
+                  <span>{result.author.reputation || 150} rep</span>
                 </span>
               </span>
               <span className="text-sm text-neutral-500 dark:text-neutral-400">

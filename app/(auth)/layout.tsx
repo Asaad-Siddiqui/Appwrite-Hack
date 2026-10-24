@@ -71,7 +71,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
               <p className="pl-4"><span className="text-amber-300">&quot;questions&quot;</span>,</p>
               <p className="pl-4">[<span className="text-sky-300">Query</span>.<span className="text-sky-400">orderDesc</span>(<span className="text-amber-300">&quot;reputation&quot;</span>)]</p>
               <p>);</p>
-              <p className="mt-2 text-emerald-400 font-semibold">// ✓ 200 OK · Singapore sgp.cloud</p>
+              <p className="mt-2 text-emerald-400 font-semibold">// 200 OK · Singapore sgp.cloud</p>
             </div>
           </div>
 

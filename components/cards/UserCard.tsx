@@ -2,7 +2,7 @@ import { getTopInteractedTags } from "@/lib/actions/tag.actions";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { CheckCircle2, Terminal } from "lucide-react";
+import { CheckCircle2, Terminal, Zap } from "lucide-react";
 
 interface Props {
   user: {
@@ -54,8 +54,9 @@ export default async function UserCard({ user }: Props) {
               <span className="text-xs text-neutral-500 truncate">
                 @{username}
               </span>
-              <span className="inline-flex items-center gap-0.5 rounded-full bg-neutral-100 dark:bg-neutral-800/80 px-2 py-0.5 text-[10px] font-bold text-neutral-600 dark:text-neutral-400">
-                ⚡ {user.reputation || 120} rep
+              <span className="inline-flex items-center gap-1 rounded-full bg-neutral-100 dark:bg-neutral-800/80 px-2 py-0.5 text-[10px] font-bold text-neutral-600 dark:text-neutral-400">
+                <Zap className="size-2.5 text-amber-500 fill-amber-500" />
+                <span>{user.reputation || 120} rep</span>
               </span>
             </div>
 
