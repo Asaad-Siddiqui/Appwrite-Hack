@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 
 const ENDPOINT = process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT || "https://sgp.cloud.appwrite.io/v1";
 const PROJECT_ID = process.env.NEXT_PUBLIC_APPWRITE_PROJECT || "6adcb0d2002b03e62588";
-const API_KEY = process.env.APPWRITE_API_KEY || "standard_d37a2f180d330a5ecf9a4a12282082d10173fa33ddfb0acfbe50acfa1ee79a73fd249b53f316bd10049dd8a05dfde24bca568fecac57459884e1e4b8e8783e81aa89a625248dd35f09016279a079e6b1fefc80e1403ba9e3f3ea75cc4f37c047e377c22e67f3398330a7260ab416f38139daa85104e14e05d69d87d89a077df9";
+const API_KEY = process.env.APPWRITE_API_KEY || "";
 export const DATABASE_ID = process.env.APPWRITE_DATABASE_ID || "6adcb48000343a1edbc5";
 
 export const TABLES = {
